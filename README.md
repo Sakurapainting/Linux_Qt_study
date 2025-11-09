@@ -6,7 +6,7 @@
 
 ### 我的开发平台
 - **Qt版本**: Qt 5.12.9
-- **编译器**: GCC 64-bit (Linux)
+- **交叉编译器/编译器**: arm 32-bit gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf / GCC 64-bit (Linux)
 - **IDE**: Qt Creator / VS Code
 - **操作系统**: Ubuntu Linux
 - **Qt安装路径**: `/opt/Qt5.12.9`

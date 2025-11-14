@@ -1,0 +1,7 @@
+[BaiduASR]
+# 填写从百度语音开放平台申请的API Key
+# https://console.bce.baidu.com/ai/#/ai/speech/overview/index
+api_key=YOUR_API_KEY_HERE
+
+# 填写从百度语音开放平台申请的Secret Key
+secret_key=YOUR_SECRET_KEY_HERE

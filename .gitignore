@@ -29,3 +29,7 @@ debug/
 release/
 Debug/
 Release/
+
+# 配置文件 - 包含敏感信息(API密钥等)
+**/config.ini
+!**/config.ini.example

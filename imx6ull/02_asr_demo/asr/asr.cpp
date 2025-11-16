@@ -158,9 +158,11 @@ QString Asr::getJsonValue(QByteArray ba, QString key)
                 } else if (jsonVal.isArray()) {
                     /* 转换成jsonArray */
                     QJsonArray arr = jsonVal.toArray();
-                    /* 获取第一个元素 */
-                    QJsonValue jv = arr.at(0);
-                    return jv.toString();
+                    /* 检查数组是否为空，然后获取第一个元素 */
+                    if (!arr.isEmpty()) {
+                        QJsonValue jv = arr.at(0);
+                        return jv.toString();
+                    }
                 }
             }
         }

@@ -16,10 +16,10 @@ Led::Led(QObject *parent)
 #if __arm__
     /* 默认是出厂系统的LED心跳的触发方式,想要控制LED，
      * 需要改变LED的触发方式，改为none，即无 */
-    system("echo none > /sys/class/leds/sys-led/trigger");
+    system("echo none > /sys/class/leds/red/trigger");
 #endif
     /* 开发板的LED控制接口 */
-    file.setFileName("/sys/devices/platform/leds/leds/sys-led/brightness");
+    file.setFileName("/sys/devices/platform/dtsleds/leds/red/brightness");
 }
 
 Led::~Led()

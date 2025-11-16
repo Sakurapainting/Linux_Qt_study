@@ -15,6 +15,11 @@ Copyright © Deng Zhimao Co., Ltd. 1990-2021. All rights reserved.
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
+#ifndef QT_NO_SSL
+#include <QSslConfiguration>
+#include <QSslSocket>
+#endif
+
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonObject>

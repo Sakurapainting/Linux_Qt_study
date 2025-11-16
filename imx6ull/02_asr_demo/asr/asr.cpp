@@ -42,11 +42,13 @@ void Asr::requestNetwork(QString url, QByteArray requestData)
     /* 网络请求 */
     QNetworkRequest networkRequest;
 
+#ifndef QT_NO_SSL
     /* 开发板需要加一些安全配置才能访问https */
     QSslConfiguration config;
     config.setPeerVerifyMode(QSslSocket::VerifyNone);
     config.setProtocol(QSsl::TlsV1SslV3);
     networkRequest.setSslConfiguration(config);
+#endif
 
     /* 以json格式返回 */
     networkRequest.setHeader(QNetworkRequest::ContentTypeHeader,

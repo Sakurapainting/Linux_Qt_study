@@ -3,6 +3,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include <QImage>
 #include <QDebug>
+#include <QString>
 
 Camera::Camera(QObject *parent) :
     QObject(parent)
@@ -26,8 +27,10 @@ void Camera::selectCameraDevice(int index)
         capture->release();
     }
 
-    /* 打开摄像头设备 */
-    capture->open(index);
+    /* 打开摄像头设备 /dev/videoX */
+    QString devicePath = QString("/dev/video%1").arg(index);
+    capture->open(devicePath.toStdString());
+    qDebug() << "尝试打开摄像头设备:" << devicePath;
 }
 
 bool Camera::cameraProcess(bool bl)

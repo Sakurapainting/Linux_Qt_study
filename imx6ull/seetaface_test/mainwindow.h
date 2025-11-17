@@ -46,6 +46,9 @@ private slots:
     /* 人脸检测开关按钮槽函数 */
     void faceDetectButtonClicked();
 
+    /* 摄像头设备变更槽函数 */
+    void onCameraDeviceChanged(const QString &deviceName);
+
 private:
     Ui::MainWindow *ui;
 

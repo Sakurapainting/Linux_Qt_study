@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QFile>
+#include <QDir>
 
 /* OpenCV 头文件 */
 #include "opencv2/core/core.hpp"
@@ -116,15 +117,29 @@ void MainWindow::layoutInit()
             this, SLOT(openCameraButtonClicked()));
     connect(faceDetectButton, SIGNAL(clicked()),
             this, SLOT(faceDetectButtonClicked()));
-    connect(comboBox, SIGNAL(currentIndexChanged(int)),
-            camera, SLOT(selectCameraDevice(int)));
+    connect(comboBox, SIGNAL(currentTextChanged(QString)),
+            this, SLOT(onCameraDeviceChanged(QString)));
 }
 
 void MainWindow::scanCameraDevice()
 {
-    /* 扫描摄像头设备，最多支持10个设备 */
-    for (int i = 0; i < 10; i++) {
-        comboBox->addItem("摄像头设备" + QString::number(i));
+    /* 扫描 /dev 目录下的 video* 设备 */
+    QDir devDir("/dev");
+    QStringList filters;
+    filters << "video*";
+    
+    QStringList videoDevices = devDir.entryList(filters, QDir::System, QDir::Name);
+    
+    if (videoDevices.isEmpty()) {
+        /* 如果没有找到设备，添加默认选项 */
+        comboBox->addItem("未找到摄像头设备");
+        qDebug() << "未在 /dev 目录下找到 video 设备";
+    } else {
+        /* 添加找到的设备 */
+        for (int i = 0; i < videoDevices.size(); i++) {
+            comboBox->addItem(videoDevices.at(i));
+            qDebug() << "找到摄像头设备: /dev/" << videoDevices.at(i);
+        }
     }
 }
 
@@ -187,6 +202,22 @@ void MainWindow::faceDetectButtonClicked()
     } else {
         faceDetectEnabled = false;
         faceDetectButton->setText("开启人脸检测");
+    }
+}
+
+void MainWindow::onCameraDeviceChanged(const QString &deviceName)
+{
+    /* 从设备名称中提取编号，例如 "video0" -> 0 */
+    QString numStr = deviceName;
+    numStr.remove("video");
+    
+    bool ok;
+    int deviceIndex = numStr.toInt(&ok);
+    
+    if (ok) {
+        camera->selectCameraDevice(deviceIndex);
+    } else {
+        qDebug() << "无效的摄像头设备名称:" << deviceName;
     }
 }
 

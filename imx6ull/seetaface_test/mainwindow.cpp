@@ -489,10 +489,10 @@ QString MainWindow::recognizeFace(const QVector<float> &feature)
 
     /* 如果最佳相似度低于阈值，返回未知 */
     if (bestSimilarity < threshold) {
-        return QString("未知(%.2f)").arg(bestSimilarity);
+        return QString("未知(%1)").arg(QString::number(bestSimilarity, 'f', 2));
     }
 
-    return QString("%1(%.2f)").arg(bestMatch).arg(bestSimilarity);
+    return QString("%1(%2)").arg(bestMatch).arg(QString::number(bestSimilarity, 'f', 2));
 }
 
 void MainWindow::saveFaceDatabase()

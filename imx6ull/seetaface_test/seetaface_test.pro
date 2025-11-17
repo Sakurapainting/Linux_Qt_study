@@ -42,11 +42,13 @@ contains(TARGET_ARCH, arm){
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    camera.cpp
+    camera.cpp \
+    virtualkeyboard.cpp
 
 HEADERS += \
     mainwindow.h \
-    camera.h
+    camera.h \
+    virtualkeyboard.h
 
 FORMS += \
     mainwindow.ui

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "camera.h"
+#include "virtualkeyboard.h"
 
 #include <QGuiApplication>
 #include <QScreen>
@@ -11,6 +12,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QDataStream>
+#include <QEvent>
 
 /* OpenCV 头文件 */
 #include "opencv2/core/core.hpp"
@@ -25,6 +27,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , virtualKeyboard(nullptr)
     , faceDetector(nullptr)
     , faceLandmarker(nullptr)
     , faceRecognizer(nullptr)
@@ -37,6 +40,11 @@ MainWindow::MainWindow(QWidget *parent)
     scanCameraDevice();
     initFaceDetector();
     loadFaceDatabase();
+
+    /* 初始化虚拟键盘 */
+    virtualKeyboard = new VirtualKeyboard(this);
+    virtualKeyboard->setLineEdit(nameLineEdit);
+    virtualKeyboard->hide();
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +60,10 @@ MainWindow::~MainWindow()
     if (faceRecognizer) {
         delete faceRecognizer;
         faceRecognizer = nullptr;
+    }
+    if (virtualKeyboard) {
+        delete virtualKeyboard;
+        virtualKeyboard = nullptr;
     }
     delete ui;
 }
@@ -117,6 +129,7 @@ void MainWindow::layoutInit()
     nameLineEdit->setMaximumHeight(30);
     nameLineEdit->setMaximumWidth(200);
     nameLineEdit->setPlaceholderText("请输入姓名");
+    nameLineEdit->setReadOnly(true);  /* 设置为只读，防止系统键盘弹出 */
 
     infoLabel->setMaximumWidth(200);
     infoLabel->setWordWrap(true);
@@ -170,6 +183,25 @@ void MainWindow::layoutInit()
             this, SLOT(faceRecognizeButtonClicked()));
     connect(comboBox, SIGNAL(currentTextChanged(QString)),
             this, SLOT(onCameraDeviceChanged(QString)));
+    
+    /* 点击输入框时显示虚拟键盘 */
+    connect(nameLineEdit, &QLineEdit::selectionChanged, [this]() {
+        /* 使用Lambda或直接调用都可以 */
+    });
+    
+    /* 使用事件过滤器来捕获点击事件 */
+    nameLineEdit->installEventFilter(this);
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == nameLineEdit) {
+        if (event->type() == QEvent::MouseButtonPress) {
+            showVirtualKeyboard();
+            return true;
+        }
+    }
+    return QMainWindow::eventFilter(obj, event);
 }
 
 void MainWindow::scanCameraDevice()
@@ -517,5 +549,14 @@ void MainWindow::loadFaceDatabase()
     
     if (!faceDatabase.isEmpty()) {
         infoLabel->setText(QString("数据库人数: %1").arg(faceDatabase.size()));
+    }
+}
+
+void MainWindow::showVirtualKeyboard()
+{
+    if (virtualKeyboard) {
+        /* 确保输入框可编辑 */
+        nameLineEdit->setReadOnly(false);
+        virtualKeyboard->showKeyboard();
     }
 }

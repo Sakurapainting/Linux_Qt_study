@@ -31,6 +31,7 @@ contains(TARGET_ARCH, arm){
     INCLUDEPATH += /home/you/SeetaFace2/build-arm/install/usr/local/include
     LIBS += -L/home/you/SeetaFace2/build-arm/install/usr/local/lib \
             -lSeetaFaceDetector \
+            -lSeetaFaceLandmarker \
             -lSeetaFaceRecognizer \
             -lSeetaNet
     

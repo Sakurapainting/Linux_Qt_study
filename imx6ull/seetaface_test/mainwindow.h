@@ -32,6 +32,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class Camera;
+class VirtualKeyboard;
 
 class MainWindow : public QMainWindow
 {
@@ -40,6 +41,10 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+protected:
+    /* 事件过滤器 */
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
     /* 接收图像信号的槽函数 */
@@ -60,6 +65,9 @@ private slots:
     /* 人脸识别开关按钮槽函数 */
     void faceRecognizeButtonClicked();
 
+    /* 显示虚拟键盘 */
+    void showVirtualKeyboard();
+
 private:
     Ui::MainWindow *ui;
 
@@ -77,6 +85,9 @@ private:
     QPushButton *faceRecognizeButton;
     QLineEdit *nameLineEdit;
     QLabel *infoLabel;
+
+    /* 虚拟键盘 */
+    VirtualKeyboard *virtualKeyboard;
 
     /* 摄像头类 */
     Camera *camera;
